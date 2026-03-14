@@ -1,0 +1,4 @@
+Google Drive Icon (google_drive_icon.png) - Google Drive is a trademark of Google Inc. Use of this trademark is subject to Google Permissions. https://developers.google.com/workspace/drive/api/guides/branding
+Discord Icon (discord_icon.svg) - https://discord.com/branding
+GitHub Icon (github_intertocat_black_clearspace.svg) - https://brand.github.com/foundations/logo
+Swarmtunes Icon (swarmtunes_icon.webp) - https://github.com/AceandGaming/Swarmtunes-client
