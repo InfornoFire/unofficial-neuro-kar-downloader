@@ -1,6 +1,9 @@
 export const ARCHIVE_FOLDER_ID = "1B1VaWp-mCKk15_7XpFnImsTdBJPOGx7a";
 export const GDRIVE_API_KEY = "AIzaSyCT3kLVgIZisiBFw_kdS236098Iiz9imV8";
 
+const CACHE_KEY = "drive-files-v1";
+const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
+
 export interface DriveFileEntry {
   id: string;
   name: string;
@@ -24,6 +27,7 @@ const FOLDER_MIME = "application/vnd.google-apps.folder";
 
 async function driveGet<T>(url: string): Promise<T> {
   const res = await fetch(url);
+  console.log("GDrive API GET", url, res.status);
   if (!res.ok) {
     throw new Error(`Google Drive API error ${res.status}`);
   }
@@ -68,26 +72,40 @@ async function walkFolder(
   } while (pageToken);
 }
 
+interface CacheEntry {
+  files: DriveFileEntry[];
+  timestamp: number;
+}
+
 export async function fetchArchiveFiles(): Promise<DriveFileEntry[]> {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if (raw) {
+      const entry: CacheEntry = JSON.parse(raw);
+      if (Date.now() - entry.timestamp < CACHE_TTL_MS) {
+        return entry.files;
+      }
+    }
+  } catch {
+    // Corrupted or unavailable cache, fall through
+  }
+
   const files: DriveFileEntry[] = [];
   await walkFolder(ARCHIVE_FOLDER_ID, "", files);
+
+  try {
+    localStorage.setItem(
+      CACHE_KEY,
+      JSON.stringify({ files, timestamp: Date.now() } satisfies CacheEntry),
+    );
+  } catch {
+    // Storage quota exceeded, ignore
+  }
+
   return files;
 }
 
 export function getDriveFileUrl(fileId: string): string {
   const params = new URLSearchParams({ key: GDRIVE_API_KEY, alt: "media" });
   return `https://www.googleapis.com/drive/v3/files/${fileId}?${params}`;
-}
-
-export async function downloadDriveFile(
-  fileId: string,
-  signal?: AbortSignal,
-): Promise<Uint8Array> {
-  const params = new URLSearchParams({ key: GDRIVE_API_KEY, alt: "media" });
-  const res = await fetch(
-    `https://www.googleapis.com/drive/v3/files/${fileId}?${params}`,
-    { signal },
-  );
-  if (!res.ok) throw new Error(`Download failed: ${res.status}`);
-  return new Uint8Array(await res.arrayBuffer());
 }

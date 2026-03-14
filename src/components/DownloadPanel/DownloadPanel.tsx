@@ -23,6 +23,8 @@ export function DownloadPanel() {
     totalCount,
     toggleFile,
     toggleFolder,
+    selectAll,
+    deselectAll,
     selectedFiles,
   } = useFileSelection();
 
@@ -59,6 +61,8 @@ export function DownloadPanel() {
           compressionLevel={compressionLevel}
           onToggleFile={toggleFile}
           onToggleFolder={toggleFolder}
+          onSelectAll={selectAll}
+          onDeselectAll={deselectAll}
           onDownload={startDownload}
           onCancel={cancel}
           onCompressionLevelChange={setCompressionLevel}

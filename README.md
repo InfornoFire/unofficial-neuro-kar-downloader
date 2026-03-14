@@ -4,59 +4,43 @@ A simple web app to download the Unofficial Neuro Karaoke Archive.
 
 The name "Unofficial Neuro KAR" derives itself as a play-on of **Kar**aoke **Ar**chive.
 
-Huge thank you to [Swarmtunes](https://swarmtunes.com/) for agreeing to help host the main site!
+Huge thank you to [Swarmtunes](https://swarmtunes.com/) for helping!
 
 ## Requirements
 
-### Languages/Tools
-
-If you only need to run:
-
 - [pnpm](https://pnpm.io/)
+
+    ```bash
+    pnpm install
+    ```
 
 - VSCode Extensions can be found in `.vscode/extensions.json`
 
-```bash
-pnpm install
-```
+### GDrive API
 
-### RClone & GDrive (Docker only)
+The site uses a public API key for users to download the drive with. For now, the key will be publicly available (since the archive is public). For private drives it might be best to use an Oauth2 Client ID instead.
 
-In order to keep an updated version of the archive, the server has a sidecar which syncs the GDrive to a mounted volume regularly.
+To create your own public API key (for your own site):
 
-#### GDrive API (Production Only)
+1. Go to console.cloud.google.com and create a new project
 
-For production environments, it's recommended to use a full GCP project to handle the API requests and avoid limits or TOS issues.
+2. Go to APIs & Services
 
-1. Google Drive API is required to automatically download songs. Here is one way to get a key:
+3. Enable -> Google Drive API
 
-    1. Go to console.cloud.google.com and create a new project
+4. Go to Credentials -> Create credentials -> API key
 
-    2. Go to APIs & Services
+    1. Add restrictions as necessary
 
-    3. Enable -> Google Drive API
-
-    4. OAuth Client Services
-
-        i. Setup (fill in) -> External
-
-        ii. Audience -> Ensure your account is under Test Users
-
-    5. Credentials -> Create -> Desktop App -> Download JSON -> `credentials.json`
+5. Copy the API key to `src/api.drive.ts`
 
 ## Usage & Running
-
-### Manual
-
-This is recommended only for live development.
-
-You can run the backend and frontend manually. Make sure to have a `./archive` folder at the root of the repository with the song files (this will not be generated with this setup). The root `package.json` has some scripts to help running (assuming `pnpm` and `bacon` are installed).
 
 ```bash
 pnpm run dev
 ```
 
-The site's frontend can be visited from `localhost:5317` and its backend from `localhost:3000`.
+The site can be visited from `http://localhost:5173/unofficial-neuro-kar-downloader/`.
 
 ## Open Source Software
 

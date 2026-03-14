@@ -27,4 +27,36 @@ function Checkbox({
   );
 }
 
-export { Checkbox };
+/** Purely visual checkbox indicator rendered as a <span>. */
+function CheckboxDisplay({
+  checked,
+  className,
+}: {
+  checked?: boolean;
+  className?: string;
+}) {
+  return (
+    <span
+      aria-hidden="true"
+      data-slot="checkbox"
+      className={cn(
+        "peer size-4 shrink-0 rounded-lg border shadow-xs grid place-content-center",
+        checked
+          ? "border-primary bg-primary text-primary-foreground"
+          : "border-input dark:bg-input/30",
+        className,
+      )}
+    >
+      {checked && (
+        <span
+          data-slot="checkbox-indicator"
+          className="grid place-content-center text-current"
+        >
+          <CheckIcon className="size-3.5" />
+        </span>
+      )}
+    </span>
+  );
+}
+
+export { Checkbox, CheckboxDisplay };

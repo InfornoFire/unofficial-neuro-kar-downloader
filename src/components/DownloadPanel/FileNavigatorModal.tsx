@@ -11,7 +11,7 @@ import {
 import { useDeferredValue, useMemo, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox, CheckboxDisplay } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -57,18 +57,17 @@ function FileRow({
     segments.length > 1 ? segments.slice(0, -1).join("/") : null;
 
   return (
-    <button
-      type="button"
-      aria-pressed={checked}
+    <label
       className="flex w-full cursor-pointer select-none items-center gap-3 rounded-sm px-3 py-2 text-left hover:bg-accent"
       onMouseDown={(e) => e.preventDefault()}
-      onClick={() => onToggleFile(path)}
     >
-      <Checkbox
+      <input
+        type="checkbox"
         checked={checked}
-        tabIndex={-1}
-        className="pointer-events-none shrink-0"
+        onChange={() => onToggleFile(path)}
+        className="sr-only"
       />
+      <CheckboxDisplay checked={checked} className="shrink-0" />
       <Music className="h-4 w-4 shrink-0 text-muted-foreground" />
       <div className="min-w-0">
         <p className="truncate text-sm">{node.entry.name}</p>
@@ -76,7 +75,7 @@ function FileRow({
           <p className="truncate text-xs text-muted-foreground">{parentDir}</p>
         )}
       </div>
-    </button>
+    </label>
   );
 }
 
@@ -126,6 +125,8 @@ interface FileNavigatorModalProps {
   isLoading: boolean;
   onToggleFile: (path: string) => void;
   onToggleFolder: (node: FolderNode) => void;
+  onSelectAll: () => void;
+  onDeselectAll: () => void;
 }
 
 export function FileNavigatorModal({
@@ -136,6 +137,8 @@ export function FileNavigatorModal({
   isLoading,
   onToggleFile,
   onToggleFolder,
+  onSelectAll,
+  onDeselectAll,
 }: FileNavigatorModalProps) {
   const [open, setOpen] = useState(false);
   const [navStack, setNavStack] = useState<FolderNode[]>([]);
@@ -203,7 +206,10 @@ export function FileNavigatorModal({
       </Button>
 
       <Dialog open={open} onOpenChange={handleOpenChange}>
-        <DialogContent className="flex h-[min(85vh,700px)] max-w-2xl flex-col gap-0 p-0">
+        <DialogContent
+          aria-describedby={undefined}
+          className="flex h-[min(85vh,700px)] max-w-2xl flex-col gap-0 p-0"
+        >
           <DialogHeader className="shrink-0 border-b px-4 pb-4 pt-5">
             <div className="flex items-center gap-2">
               {navStack.length > 0 && !isSearching && (
@@ -334,6 +340,25 @@ export function FileNavigatorModal({
                 )}
             </div>
           </ScrollArea>
+
+          <div className="shrink-0 flex gap-2 border-t px-4 py-3">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onSelectAll}
+              disabled={isLoading}
+            >
+              Select all
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onDeselectAll}
+              disabled={isLoading || selectedCount === 0}
+            >
+              Deselect all
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
     </>

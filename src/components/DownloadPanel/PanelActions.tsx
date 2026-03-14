@@ -15,6 +15,8 @@ export interface PanelActionsProps {
   compressionLevel: number;
   onToggleFile: (path: string) => void;
   onToggleFolder: (node: FolderNode) => void;
+  onSelectAll: () => void;
+  onDeselectAll: () => void;
   onDownload: () => void;
   onCancel: () => void;
   onCompressionLevelChange: (level: number) => void;
@@ -30,6 +32,8 @@ export function PanelActions({
   compressionLevel,
   onToggleFile,
   onToggleFolder,
+  onSelectAll,
+  onDeselectAll,
   onDownload,
   onCancel,
   onCompressionLevelChange,
@@ -57,6 +61,8 @@ export function PanelActions({
             isLoading={isLoading}
             onToggleFile={onToggleFile}
             onToggleFolder={onToggleFolder}
+            onSelectAll={onSelectAll}
+            onDeselectAll={onDeselectAll}
           />
           <ArchiveOptionsPopover
             compressionLevel={compressionLevel}

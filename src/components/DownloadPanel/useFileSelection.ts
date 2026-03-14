@@ -46,6 +46,14 @@ export function useFileSelection() {
     });
   }, []);
 
+  const selectAll = useCallback(() => {
+    setSelectedPaths(new Set(allFiles.map((f) => f.relativePath)));
+  }, [allFiles]);
+
+  const deselectAll = useCallback(() => {
+    setSelectedPaths(new Set());
+  }, []);
+
   // Empty selection means all files
   const selectedFiles = useMemo(
     () =>
@@ -63,6 +71,8 @@ export function useFileSelection() {
     totalCount,
     toggleFile,
     toggleFolder,
+    selectAll,
+    deselectAll,
     selectedFiles,
   };
 }

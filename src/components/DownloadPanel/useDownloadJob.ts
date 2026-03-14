@@ -3,20 +3,34 @@ import { useCallback, useRef, useState } from "react";
 import { type DriveFileEntry, getDriveFileUrl } from "@/api/drive";
 import type { DownloadState } from "./types";
 
-const CONCURRENCY = 7;
+const CONCURRENCY = 3;
+const MAX_RETRIES = 3;
 
 async function pooled(
   items: DriveFileEntry[],
   limit: number,
   fn: (item: DriveFileEntry) => Promise<void>,
+  maxRetries = 0,
 ): Promise<void> {
   const queue = [...items];
+  const retryCounts = new Map<DriveFileEntry, number>();
   const workers = Array.from(
     { length: Math.min(limit, items.length) },
     async () => {
       while (queue.length > 0) {
         const item = queue.shift();
-        if (item !== undefined) await fn(item);
+        if (item === undefined) continue;
+        try {
+          await fn(item);
+        } catch (err) {
+          const attempts = (retryCounts.get(item) ?? 0) + 1;
+          retryCounts.set(item, attempts);
+          if (attempts <= maxRetries) {
+            queue.push(item);
+          } else {
+            throw err;
+          }
+        }
       }
     },
   );
@@ -95,46 +109,49 @@ export function useDownloadJob(
     });
 
     try {
-      await pooled(selectedFiles, CONCURRENCY, async (file) => {
-        if (controller.signal.aborted) return;
+      await pooled(
+        selectedFiles,
+        CONCURRENCY,
+        async (file) => {
+          if (controller.signal.aborted) return;
 
-        activeFiles.add(file.relativePath);
-        pushState();
-
-        const response = await fetch(getDriveFileUrl(file.id), {
-          signal: controller.signal,
-        });
-        if (!response.ok)
-          throw new Error(`Download failed: ${response.status}`);
-
-        const zipEntry =
-          compressionLevel === 0
-            ? new ZipPassThrough(file.relativePath)
-            : new ZipDeflate(file.relativePath, {
-                level: compressionLevel as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9,
-              });
-        zip.add(zipEntry);
-
-        const reader = response.body?.getReader();
-        if (!reader) {
-          throw new Error("Failed to get reader from response body");
-        }
-
-        for (;;) {
-          const { done, value } = await reader.read();
-          if (done) {
-            zipEntry.push(new Uint8Array(0), true);
-            break;
-          }
-          zipEntry.push(value, false);
-          bytesDownloaded += value.byteLength;
+          activeFiles.add(file.relativePath);
           pushState();
-        }
 
-        activeFiles.delete(file.relativePath);
-        filesDone++;
-        pushState();
-      });
+          const response = await fetch(getDriveFileUrl(file.id), {
+            signal: controller.signal,
+          });
+          if (!response.ok)
+            throw new Error(`Download failed: ${response.status}`);
+
+          const zipEntry =
+            compressionLevel === 0
+              ? new ZipPassThrough(file.relativePath)
+              : new ZipDeflate(file.relativePath, {
+                  level: compressionLevel as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9,
+                });
+          zip.add(zipEntry);
+
+          const reader = response.body?.getReader();
+          if (!reader) {
+            throw new Error("Failed to get reader from response body");
+          }
+
+          let readResult = await reader.read();
+          while (!readResult.done) {
+            zipEntry.push(readResult.value, false);
+            bytesDownloaded += readResult.value.byteLength;
+            pushState();
+            readResult = await reader.read();
+          }
+          zipEntry.push(new Uint8Array(0), true);
+
+          activeFiles.delete(file.relativePath);
+          filesDone++;
+          pushState();
+        },
+        MAX_RETRIES,
+      );
 
       if (controller.signal.aborted) {
         if (writableStream) await writableStream.abort().catch(() => {});
@@ -147,8 +164,12 @@ export function useDownloadJob(
       if (writableStream) {
         await writeChain;
         await writableStream.close();
-      } else { // Blob download fallback
-        const blob = new Blob(zipChunks.map(c => c.buffer as ArrayBuffer), { type: "application/zip" });
+      } else {
+        // Blob download fallback
+        const blob = new Blob(
+          zipChunks.map((c) => c.buffer as ArrayBuffer),
+          { type: "application/zip" },
+        );
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
