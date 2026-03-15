@@ -1,12 +1,12 @@
 # Unofficial Neuro Karaoke Archive Downloader
 
-A simple web app to download the Unofficial Neuro Karaoke Archive.
+A simple site to download the Unofficial Neuro Karaoke Archive.
 
 The name "Unofficial Neuro KAR" derives itself as a play-on of **Kar**aoke **Ar**chive.
 
 Huge thank you to [Swarmtunes](https://swarmtunes.com/) for helping!
 
-## Requirements
+## Tooling
 
 - [pnpm](https://pnpm.io/)
 
@@ -16,11 +16,15 @@ Huge thank you to [Swarmtunes](https://swarmtunes.com/) for helping!
 
 - VSCode Extensions can be found in `.vscode/extensions.json`
 
-### GDrive API
+## Cloudflare Workers
 
-The site uses a OAuth2 Client for users to download the drive with. This has no scope within the application and is simply used for Google's API to register the downloads under.
+In order to get downloads working, the frontend forwards equivalent requests to Cloudflare Workers. These use a Google Service Account to then forward the bytes/files to the user.
 
-To create your own public API key (for your own site):
+This implementation choice is due to Google Drive API Keys causing rate limits and OAuth2 Clients asking for all of a user's drive (with no smaller scope). Should an alternate method show up, these workers may be decomissioned.
+
+### GDrive Service Account
+
+To create your own Service Account:
 
 1. Go to console.cloud.google.com and create a new project
 
@@ -28,15 +32,37 @@ To create your own public API key (for your own site):
 
 3. Enable -> Google Drive API
 
-4. OAuth Client Services
+4. Credentials -> Create credentials -> Service Account
 
-    i. Setup (fill in) -> External
+5. Edit the Service Account -> Keys -> Add key -> JSON
 
-    ii. Audience -> Ensure your account is under Test Users
+6. The Google Drive folder must explicitly grant/share Viewer access to the Service Account (even if it is public)
 
-5. Credentials -> Create -> Web App -> Download JSON -> `credentials.json`
+### Worker
 
-6. Add the client ID to `src/api/drive.ts`
+To create a worker, use the wrangler CLI:
+
+1. Login to Cloudflare with Wrangler:
+
+    ```bash
+    pnpm wrangler login
+    ```
+
+2. Add secrets
+
+    ```bash
+    wrangler secret put
+    ```
+
+    1. Add `GOOGLE_SERVICE_ACCOUNT_EMAIL`
+
+    2. Add `GOOGLE_PRIVATE_KEY`
+
+3. Use env templates. Create a copy of the files without the `.template` and fill out the information
+
+    1. `env.local.template` controls the URL to the worker. If left blank will use the localhost (which does not hit the API). If on GitHub Pages, instead add secret `secrets.VITE_WORKER_URL`
+
+    2. `worker/.dev.vars.template` controls the Google Service Account
 
 ## Usage & Running
 
@@ -45,6 +71,12 @@ pnpm run dev
 ```
 
 The site can be visited from `http://localhost:5173/unofficial-neuro-kar-downloader/`.
+
+## Deployment
+
+```bash
+pnpm deploy
+```
 
 ## Open Source Software
 

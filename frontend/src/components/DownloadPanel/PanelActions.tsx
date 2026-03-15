@@ -1,10 +1,5 @@
 import { Download, Loader2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { ArchiveOptionsPopover } from "./ArchiveOptionsPopover";
 import { FileNavigatorModal } from "./FileNavigatorModal";
 import type { FolderNode, TreeNode } from "./tree";
@@ -17,7 +12,6 @@ export interface PanelActionsProps {
   tree: TreeNode[];
   selectedPaths: ReadonlySet<string>;
   isLoading: boolean;
-  isAuthenticated: boolean;
   compressionLevel: number;
   onToggleFile: (path: string) => void;
   onToggleFolder: (node: FolderNode) => void;
@@ -35,7 +29,6 @@ export function PanelActions({
   tree,
   selectedPaths,
   isLoading,
-  isAuthenticated,
   compressionLevel,
   onToggleFile,
   onToggleFolder,
@@ -56,29 +49,10 @@ export function PanelActions({
     <>
       {isIdle && (
         <>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <span className="inline-flex">
-                <Button
-                  onClick={onDownload}
-                  className="gap-2"
-                  disabled={!isAuthenticated}
-                >
-                  <Download className="h-4 w-4" />
-                  {downloadLabel}
-                </Button>
-              </span>
-            </TooltipTrigger>
-            {!isAuthenticated && (
-              <TooltipContent className="max-w-64">
-                <p>
-                  Sign in with Google is required to make Google Drive API
-                  calls. Your account is never read and no information is
-                  stored.
-                </p>
-              </TooltipContent>
-            )}
-          </Tooltip>
+          <Button onClick={onDownload} className="gap-2">
+            <Download className="h-4 w-4" />
+            {downloadLabel}
+          </Button>
           <FileNavigatorModal
             tree={tree}
             selectedCount={selectedCount}

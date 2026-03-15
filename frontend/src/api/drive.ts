@@ -1,9 +1,6 @@
 export const ARCHIVE_FOLDER_ID = "1B1VaWp-mCKk15_7XpFnImsTdBJPOGx7a";
 const GDRIVE_API_KEY = "AIzaSyCT3kLVgIZisiBFw_kdS236098Iiz9imV8";
-export const GDRIVE_OAUTH2_CLIENT_ID =
-  "588650665534-llj05224877ac3vmrr4l4so80r6gigqq.apps.googleusercontent.com";
-
-import { getAccessToken } from "./auth";
+const WORKER_URL = import.meta.env.VITE_WORKER_URL ?? "http://localhost:8787";
 
 const CACHE_KEY = "drive-files-v1";
 const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
@@ -30,11 +27,7 @@ interface DriveFilesResponse {
 const FOLDER_MIME = "application/vnd.google-apps.folder";
 
 async function driveGet<T>(url: string): Promise<T> {
-  const token = getAccessToken();
-  const headers: Record<string, string> = token
-    ? { Authorization: `Bearer ${token}` }
-    : {};
-  const res = await fetch(url, { headers });
+  const res = await fetch(url);
   if (import.meta.env.DEV) console.log("GDrive API GET", url, res.status);
   if (!res.ok) {
     throw new Error(`Google Drive API error ${res.status}`);
@@ -114,14 +107,5 @@ export async function fetchArchiveFiles(): Promise<DriveFileEntry[]> {
 }
 
 export function getDriveFileUrl(fileId: string): string {
-  const token = getAccessToken();
-  if (token) {
-    return `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`;
-  }
-  throw new Error("Not authenticated");
-}
-
-export function getDownloadHeaders(): Record<string, string> {
-  const token = getAccessToken();
-  return token ? { Authorization: `Bearer ${token}` } : {};
+  return `${WORKER_URL}/file/${fileId}`;
 }

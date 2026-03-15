@@ -14,3 +14,10 @@ __MACOSX/
 # Node
 node_modules
 dist
+
+# Cloudflare & Wrangler
+.wrangler
+
+# Local env / secrets
+.env.local
+.dev.vars

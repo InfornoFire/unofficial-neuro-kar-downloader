@@ -1,0 +1,5 @@
+# ***COPY AND REMOVE .template EXTENSION***
+# Local dev secrets for wrangler dev.
+# Copy values from your service account JSON key file.
+GOOGLE_SERVICE_ACCOUNT_EMAIL=
+GOOGLE_PRIVATE_KEY=-----BEGIN PRIVATE KEY----- ... \n-----END PRIVATE KEY-----\n

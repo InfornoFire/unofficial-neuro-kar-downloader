@@ -1,7 +1,7 @@
 {
-    "recommendations": [
-        "biomejs.biome",
-        "bradlc.vscode-tailwindcss",
-        "davidanson.vscode-markdownlint",
-    ],
+  "recommendations": [
+    "biomejs.biome",
+    "bradlc.vscode-tailwindcss",
+    "davidanson.vscode-markdownlint"
+  ]
 }

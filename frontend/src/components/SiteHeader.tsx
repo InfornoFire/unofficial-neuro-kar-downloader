@@ -7,7 +7,6 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { GoogleSignInButton } from "./GoogleSignInButton";
 
 function IconLink({
   href,
@@ -113,7 +112,6 @@ export function SiteHeader() {
           <IconLink href="https://swarmtunes.com/" label="SwarmTunes">
             <img src={swarmtunesIcon} alt="SwarmTunes" className="h-5 w-5" />
           </IconLink>
-          <GoogleSignInButton />
         </nav>
       </div>
     </header>

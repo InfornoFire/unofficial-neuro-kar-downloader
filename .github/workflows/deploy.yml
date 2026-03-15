@@ -26,11 +26,13 @@ jobs:
 
       - name: Build static files
         run: pnpm build
+        env:
+          VITE_WORKER_URL: ${{ secrets.VITE_WORKER_URL }}
 
       - name: Upload static files as artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: dist/
+          path: frontend/dist/
 
   deploy:
     runs-on: ubuntu-latest
