@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useAuth } from "@/contexts/AuthContext";
 import { JobStatusDisplay } from "./JobStatusDisplay";
 import { PanelActions } from "./PanelActions";
 import { useDownloadJob } from "./useDownloadJob";
@@ -14,6 +15,7 @@ import { useFileSelection } from "./useFileSelection";
 
 export function DownloadPanel() {
   const [compressionLevel, setCompressionLevel] = useState(0);
+  const { isSignedIn } = useAuth();
 
   const {
     isLoading,
@@ -58,6 +60,7 @@ export function DownloadPanel() {
           tree={tree}
           selectedPaths={selectedPaths}
           isLoading={isLoading}
+          isAuthenticated={isSignedIn}
           compressionLevel={compressionLevel}
           onToggleFile={toggleFile}
           onToggleFolder={toggleFolder}

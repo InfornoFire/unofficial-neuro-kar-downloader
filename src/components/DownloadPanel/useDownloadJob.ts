@@ -1,9 +1,13 @@
 import { Zip, ZipDeflate, ZipPassThrough } from "fflate";
 import { useCallback, useRef, useState } from "react";
-import { type DriveFileEntry, getDriveFileUrl } from "@/api/drive";
+import {
+  type DriveFileEntry,
+  getDownloadHeaders,
+  getDriveFileUrl,
+} from "@/api/drive";
 import type { DownloadState } from "./types";
 
-const CONCURRENCY = 3;
+const CONCURRENCY = 5;
 const MAX_RETRIES = 3;
 
 async function pooled(
@@ -120,6 +124,7 @@ export function useDownloadJob(
 
           const response = await fetch(getDriveFileUrl(file.id), {
             signal: controller.signal,
+            headers: getDownloadHeaders(),
           });
           if (!response.ok)
             throw new Error(`Download failed: ${response.status}`);

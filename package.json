@@ -14,6 +14,8 @@
     "lint": "biome check src --write && biome format src --write"
   },
   "dependencies": {
+    "@googleworkspace/drive-picker-react": "^0.2.0",
+    "@react-oauth/google": "^0.13.4",
     "@tanstack/react-query": "^5.90.21",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -29,6 +31,8 @@
     "@eslint/js": "^9.39.1",
     "@j178/prek": "^0.3.3",
     "@tailwindcss/vite": "^4.2.1",
+    "@types/gapi": "^0.0.47",
+    "@types/google.picker": "^0.0.52",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",

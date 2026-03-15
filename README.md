@@ -18,7 +18,7 @@ Huge thank you to [Swarmtunes](https://swarmtunes.com/) for helping!
 
 ### GDrive API
 
-The site uses a public API key for users to download the drive with. For now, the key will be publicly available (since the archive is public). For private drives it might be best to use an Oauth2 Client ID instead.
+The site uses a OAuth2 Client for users to download the drive with. This has no scope within the application and is simply used for Google's API to register the downloads under.
 
 To create your own public API key (for your own site):
 
@@ -28,11 +28,15 @@ To create your own public API key (for your own site):
 
 3. Enable -> Google Drive API
 
-4. Go to Credentials -> Create credentials -> API key
+4. OAuth Client Services
 
-    1. Add restrictions as necessary
+    i. Setup (fill in) -> External
 
-5. Copy the API key to `src/api.drive.ts`
+    ii. Audience -> Ensure your account is under Test Users
+
+5. Credentials -> Create -> Web App -> Download JSON -> `credentials.json`
+
+6. Add the client ID to `src/api/drive.ts`
 
 ## Usage & Running
 
