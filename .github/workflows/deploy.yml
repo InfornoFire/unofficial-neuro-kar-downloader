@@ -1,7 +1,11 @@
+name: Deploy GitHub Pages
+
 on:
   push:
     branches:
       - main
+    paths:
+      - 'frontend/**'
   workflow_dispatch:
 
 jobs:

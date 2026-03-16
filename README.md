@@ -75,7 +75,7 @@ The site can be visited from `http://localhost:5173/unofficial-neuro-kar-downloa
 ## Deployment
 
 ```bash
-pnpm deploy
+pnpm deploy:worker
 ```
 
 ## Open Source Software
