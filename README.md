@@ -70,7 +70,7 @@ To create a worker, use the wrangler CLI:
 pnpm run dev
 ```
 
-The site can be visited from `http://localhost:5173/unofficial-neuro-kar-downloader/`.
+The site can be visited from `http://localhost:5173/`.
 
 ## Deployment
 
