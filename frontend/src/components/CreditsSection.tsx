@@ -1,8 +1,8 @@
 import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import {
   ART_CREDITS,
@@ -14,14 +14,14 @@ import {
 function ArtCreditRow({ credit }: { credit: ArtCredit }) {
   return (
     <li className="text-sm">
-      <HoverCard openDelay={100} closeDelay={100}>
+      <Popover>
         <div className="flex items-center gap-3 rounded px-1 py-1">
-          <HoverCardTrigger className="font-medium underline-offset-2 hover:underline cursor-pointer">
+          <PopoverTrigger className="font-medium underline-offset-2 hover:underline cursor-pointer">
             {credit.name}
-          </HoverCardTrigger>
+          </PopoverTrigger>
           <span className="text-muted-foreground">{credit.discs}</span>
         </div>
-        <HoverCardContent className="w-auto p-2" align="start">
+        <PopoverContent className="w-auto p-2" align="start">
           <ul className="flex flex-col gap-1">
             {credit.links.map(({ label, href }) => (
               <li key={href}>
@@ -36,8 +36,8 @@ function ArtCreditRow({ credit }: { credit: ArtCredit }) {
               </li>
             ))}
           </ul>
-        </HoverCardContent>
-      </HoverCard>
+        </PopoverContent>
+      </Popover>
     </li>
   );
 }

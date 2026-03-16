@@ -50,7 +50,7 @@ export function DownloadPanel() {
         <JobStatusDisplay state={state} />
       </CardContent>
 
-      <CardFooter className="flex gap-2">
+      <CardFooter className="flex flex-wrap gap-2">
         <PanelActions
           state={state}
           selectedCount={selectedCount}
