@@ -3,10 +3,10 @@ import githubIcon from "@/assets/github_invertocat_white_clearspace.svg";
 import googleDriveIcon from "@/assets/google_drive_icon.png";
 import swarmtunesIcon from "@/assets/swarmtunes_icon.webp";
 import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 function IconLink({
   href,
@@ -40,14 +40,14 @@ function IconHoverCard({
   links: { label: string; href: string }[];
 }) {
   return (
-    <HoverCard openDelay={100} closeDelay={100}>
-      <HoverCardTrigger
+    <Popover>
+      <PopoverTrigger
         aria-label={label}
         className="text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
       >
         {icon}
-      </HoverCardTrigger>
-      <HoverCardContent className="w-auto p-2" align="center">
+      </PopoverTrigger>
+      <PopoverContent className="w-auto p-2" align="center">
         <ul className="flex flex-col gap-1">
           {links.map(({ label: linkLabel, href }) => (
             <li key={href}>
@@ -62,8 +62,8 @@ function IconHoverCard({
             </li>
           ))}
         </ul>
-      </HoverCardContent>
-    </HoverCard>
+      </PopoverContent>
+    </Popover>
   );
 }
 
