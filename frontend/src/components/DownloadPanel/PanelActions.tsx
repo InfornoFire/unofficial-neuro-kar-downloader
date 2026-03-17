@@ -1,5 +1,14 @@
 import { Download, Loader2, X } from "lucide-react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { ArchiveOptionsPopover } from "./ArchiveOptionsPopover";
 import { FileNavigatorModal } from "./FileNavigatorModal";
 import type { FolderNode, TreeNode } from "./tree";
@@ -39,6 +48,7 @@ export function PanelActions({
   onCompressionLevelChange,
 }: PanelActionsProps) {
   const isIdle = state.phase === "idle" || state.phase === "error";
+  const [cancelConfirmOpen, setCancelConfirmOpen] = useState(false);
 
   const downloadLabel =
     selectedCount === 0
@@ -79,10 +89,44 @@ export function PanelActions({
       )}
 
       {state.phase === "downloading" && (
-        <Button variant="outline" onClick={onCancel} className="gap-2">
-          <X className="h-4 w-4" />
-          Cancel
-        </Button>
+        <>
+          <Button
+            variant="outline"
+            onClick={() => setCancelConfirmOpen(true)}
+            className="gap-2"
+          >
+            <X className="h-4 w-4" />
+            Cancel
+          </Button>
+          <Dialog open={cancelConfirmOpen} onOpenChange={setCancelConfirmOpen}>
+            <DialogContent showCloseButton={false}>
+              <DialogHeader>
+                <DialogTitle>Cancel Download?</DialogTitle>
+                <DialogDescription>
+                  The download in progress will be stopped and you will need to
+                  start over.
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <Button
+                  variant="outline"
+                  onClick={() => setCancelConfirmOpen(false)}
+                >
+                  Keep Downloading
+                </Button>
+                <Button
+                  variant="destructive"
+                  onClick={() => {
+                    onCancel();
+                    setCancelConfirmOpen(false);
+                  }}
+                >
+                  Cancel Download
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </>
       )}
     </>
   );
