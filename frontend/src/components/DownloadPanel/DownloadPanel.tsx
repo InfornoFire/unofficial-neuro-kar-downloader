@@ -1,3 +1,4 @@
+import { X } from "lucide-react";
 import { useState } from "react";
 import {
   Card,
@@ -26,6 +27,8 @@ export function DownloadPanel() {
     selectAll,
     deselectAll,
     selectedFiles,
+    removedCount,
+    dismissRemovedNotification,
   } = useFileSelection();
 
   const { state, startDownload, cancel } = useDownloadJob(
@@ -47,6 +50,24 @@ export function DownloadPanel() {
       </CardHeader>
 
       <CardContent className="space-y-4">
+        {removedCount > 0 && (
+          <div className="flex items-start justify-between gap-2 rounded-md border bg-muted/50 px-3 py-2 text-sm">
+            <span className="text-muted-foreground">
+              {removedCount} previously selected{" "}
+              {removedCount === 1 ? "file" : "files"} no longer exist in the
+              archive and {removedCount === 1 ? "was" : "were"} removed from
+              your selection.
+            </span>
+            <button
+              type="button"
+              onClick={dismissRemovedNotification}
+              className="mt-0.5 shrink-0 text-muted-foreground opacity-70 hover:opacity-100"
+              aria-label="Dismiss"
+            >
+              <X className="h-3 w-3" />
+            </button>
+          </div>
+        )}
         <JobStatusDisplay state={state} />
       </CardContent>
 
