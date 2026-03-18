@@ -1,7 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { fetchArchiveFiles } from "@/api/drive";
-import { buildTree, type FolderNode, getAllDescendantPaths } from "./tree";
+import {
+  buildTree,
+  type FolderNode,
+  getAllDescendantPaths,
+} from "@/archive/tree";
 
 const SELECTION_LS_KEY = "selected-paths-v1";
 

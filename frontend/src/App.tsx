@@ -1,7 +1,7 @@
 import { ChevronDown } from "lucide-react";
 import { CreditsSection } from "@/components/CreditsSection";
-import { DownloadPanel } from "@/components/DownloadPanel";
 import { SiteHeader } from "@/components/SiteHeader";
+import { DownloadPanel } from "@/features/download";
 
 export function App() {
   return (

@@ -1,7 +1,7 @@
 import { Zip, ZipDeflate, ZipPassThrough } from "fflate";
 import { useCallback, useRef, useState } from "react";
 import { type DriveFileEntry, getDriveFileUrl } from "@/api/drive";
-import type { DownloadState } from "./types";
+import type { DownloadState } from "@/archive/types";
 
 const CONCURRENCY = 5;
 const MAX_RETRIES = 3;

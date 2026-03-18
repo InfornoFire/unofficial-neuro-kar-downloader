@@ -9,6 +9,14 @@ import {
   Search,
 } from "lucide-react";
 import { useDeferredValue, useMemo, useState } from "react";
+import {
+  type FileNode,
+  type FolderCheckState,
+  type FolderNode,
+  filterTree,
+  getFolderCheckState,
+  type TreeNode,
+} from "@/archive/tree";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox, CheckboxDisplay } from "@/components/ui/checkbox";
@@ -20,14 +28,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  type FileNode,
-  type FolderCheckState,
-  type FolderNode,
-  filterTree,
-  getFolderCheckState,
-  type TreeNode,
-} from "./tree";
 
 function flattenFiles(nodes: TreeNode[]): FileNode[] {
   const result: FileNode[] = [];

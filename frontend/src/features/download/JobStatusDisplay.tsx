@@ -1,7 +1,7 @@
+import { downloadProgressValue, formatBytes } from "@/archive/format";
+import type { DownloadState } from "@/archive/types";
 import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import type { DownloadState } from "./types";
-import { downloadProgressValue, formatBytes } from "./utils";
 
 interface Props {
   state: DownloadState;

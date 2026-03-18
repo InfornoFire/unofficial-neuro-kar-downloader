@@ -8,10 +8,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useDownloadJob } from "./hooks/useDownloadJob";
+import { useFileSelection } from "./hooks/useFileSelection";
 import { JobStatusDisplay } from "./JobStatusDisplay";
 import { PanelActions } from "./PanelActions";
-import { useDownloadJob } from "./useDownloadJob";
-import { useFileSelection } from "./useFileSelection";
 
 export function DownloadPanel() {
   const [compressionLevel, setCompressionLevel] = useState(0);

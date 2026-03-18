@@ -1,5 +1,7 @@
 import { Download, Loader2, X } from "lucide-react";
 import { useState } from "react";
+import type { FolderNode, TreeNode } from "@/archive/tree";
+import type { DownloadState } from "@/archive/types";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,8 +13,6 @@ import {
 } from "@/components/ui/dialog";
 import { ArchiveOptionsPopover } from "./ArchiveOptionsPopover";
 import { FileNavigatorModal } from "./FileNavigatorModal";
-import type { FolderNode, TreeNode } from "./tree";
-import type { DownloadState } from "./types";
 
 export interface PanelActionsProps {
   state: DownloadState;
